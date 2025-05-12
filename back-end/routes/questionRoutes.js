@@ -1,17 +1,8 @@
-const express = require('express');
-const {
-  askQuestion,
-  getClientQuestions,
-  getAllQuestions,
-  answerQuestion,
-  markBestAnswer,
-} = require('../controllers/questionController');
-const router = express.Router();
-
-router.post('/ask', askQuestion);
-router.get('/client/:clientId', getClientQuestions);
-router.get('/all', getAllQuestions);
-router.post('/answer', answerQuestion);
-router.post('/mark-best/:questionId/:answerIndex', markBestAnswer);
-
+const router = require('express').Router();
+const qc = require('../controllers/questionController');
+router.post('/ask', qc.askQuestion);
+router.get('/client/:clientId', qc.getClientQuestions);
+router.get('/all', qc.getAllQuestions);
+router.post('/answer', qc.answerQuestion);
+router.post('/mark-best/:questionId/:answerIndex', qc.markBestAnswer);
 module.exports = router;

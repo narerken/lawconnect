@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 exports.register = async (req, res) => {
   const { email, username, password, role } = req.body;
   const existing = await User.findOne({ email });
-  if (existing) return res.status(400).json({ message: 'Email already exists' });
+  if (existing) return res.status(400).json({ message: 'Email exists' });
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await User.create({ email, username, password: hashedPassword, role });
 
-  res.status(201).json({ message: 'User registered' });
+  res.status(201).json({ message: 'User created' });
 };
 
 exports.login = async (req, res) => {
@@ -21,14 +21,5 @@ exports.login = async (req, res) => {
   }
 
   const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET);
-  res.json({
-    token,
-    user: {
-      id: user._id,
-      email: user.email,
-      username: user.username,
-      role: user.role,
-      points: user.points,
-    },
-  });
+  res.json({ token, user: { id: user._id, email: user.email, username: user.username, role: user.role, points: user.points } });
 };

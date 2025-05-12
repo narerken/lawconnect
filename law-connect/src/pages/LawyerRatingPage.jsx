@@ -1,36 +1,36 @@
 import { useEffect, useState } from 'react';
 import { 
+  Card, 
   List, 
   Avatar, 
-  Card, 
   Typography, 
   Row, 
   Col,
   Tag,
   Divider,
-  Space,
   Statistic,
-  Button
+  Badge,
+  Space
 } from 'antd';
 import { 
-  MessageOutlined,
-  CalendarOutlined,
+  CrownOutlined,
   StarOutlined,
-  CrownOutlined
+  TrophyOutlined,
+  UserOutlined
 } from '@ant-design/icons';
 import axios from '../api/axios';
-import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 
 const { Title, Text } = Typography;
 
-const LawyerListPage = () => {
+const LawyerRatingPage = () => {
   const [lawyers, setLawyers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchLawyers = async () => {
       try {
+        setLoading(true);
         const res = await axios.get('/questions/all');
         const ratingMap = {};
 
@@ -39,10 +39,16 @@ const LawyerListPage = () => {
             if (!ans.lawyerId) return;
             const id = ans.lawyerId._id;
             if (!ratingMap[id]) {
-              ratingMap[id] = { ...ans.lawyerId, rating: 0, answersCount: 0 };
+              ratingMap[id] = { 
+                ...ans.lawyerId, 
+                rating: 0,
+                answersCount: 0,
+                bestAnswers: 0
+              };
             }
             ratingMap[id].rating += ans.isBest ? 10 : 1;
             ratingMap[id].answersCount += 1;
+            if (ans.isBest) ratingMap[id].bestAnswers += 1;
           });
         });
 
@@ -58,6 +64,15 @@ const LawyerListPage = () => {
     fetchLawyers();
   }, []);
 
+  const getMedalColor = (index) => {
+    switch(index) {
+      case 0: return '#ffd700'; // gold
+      case 1: return '#c0c0c0'; // silver
+      case 2: return '#cd7f32'; // bronze
+      default: return null;
+    }
+  };
+
   return (
     <div style={{ 
       minHeight: '100vh',
@@ -65,14 +80,14 @@ const LawyerListPage = () => {
     }}>
       <Header />
       
-      <div style={{ paddingTop: 150  }}>
+      <div style={{ padding: 150}}>
         <Row justify="center">
           <Col xs={24} md={22} lg={20} xl={18}>
             <Card
               title={
                 <Title level={3} style={{ marginBottom: 0 }}>
-                  <CrownOutlined style={{ marginRight: '8px', color: '#faad14' }} />
-                  Юристы по рейтингу
+                  <TrophyOutlined style={{ marginRight: '8px', color: '#faad14' }} />
+                  Рейтинг юристов
                 </Title>
               }
               loading={loading}
@@ -92,14 +107,29 @@ const LawyerListPage = () => {
                           prefix={<StarOutlined />}
                         />
                         <Statistic 
-                          title="Ответов" 
-                          value={lawyer.answersCount} 
+                          title="Лучших ответов" 
+                          value={lawyer.bestAnswers} 
                         />
                       </Space>
                     }
                   >
                     <List.Item.Meta
-                      avatar={<Avatar size="large" src={lawyer.avatar}>{lawyer.username.charAt(0)}</Avatar>}
+                      avatar={
+                        <Badge 
+                          count={index + 1}
+                          style={{ 
+                            backgroundColor: getMedalColor(index),
+                            color: index < 3 ? '#fff' : '#000'
+                          }}
+                        >
+                          <Avatar 
+                            size={64} 
+                            src={lawyer.avatar} 
+                            icon={<UserOutlined />}
+                            style={{ border: `2px solid ${getMedalColor(index) || '#ddd'}` }}
+                          />
+                        </Badge>
+                      }
                       title={
                         <Space>
                           <Text strong>{lawyer.username}</Text>
@@ -115,25 +145,10 @@ const LawyerListPage = () => {
                           <Tag icon={<StarOutlined />} color="gold">
                             Эксперт
                           </Tag>
-                          <Tag>Специализация</Tag>
+                          <Tag>Ответов: {lawyer.answersCount}</Tag>
                         </Space>
                       }
                     />
-                    
-                    <Divider style={{ margin: '12px 0' }} />
-                    
-                    <Space>
-                      <Link to={`/book/${lawyer._id}`}>
-                        <Button type="primary" icon={<CalendarOutlined />}>
-                          Записаться
-                        </Button>
-                      </Link>
-                      <Link to={`/chat/${lawyer._id}`}>
-                        <Button icon={<MessageOutlined />}>
-                          Написать
-                        </Button>
-                      </Link>
-                    </Space>
                   </List.Item>
                 )}
               />
@@ -145,4 +160,4 @@ const LawyerListPage = () => {
   );
 };
 
-export default LawyerListPage;
+export default LawyerRatingPage;

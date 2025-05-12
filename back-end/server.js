@@ -10,12 +10,10 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/questions', require('./routes/questionRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/chat', require('./routes/chatRoutes'));
+// app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/export', require('./routes/exportRoutes'));
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(process.env.PORT, () =>
-      console.log(`Server running on port ${process.env.PORT}`)
-    );
-  })
-  .catch((err) => console.error(err));
+  .then(() => app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`)))
+  .catch(err => console.error(err));

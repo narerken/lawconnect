@@ -7,7 +7,12 @@ exports.createBooking = async (req, res) => {
 };
 
 exports.getBookingsForLawyer = async (req, res) => {
-  const { lawyerId } = req.params;
-  const bookings = await Booking.find({ lawyerId }).populate('clientId', 'username email');
+  const bookings = await Booking.find({ lawyerId: req.params.lawyerId }).populate('clientId', 'username');
   res.json(bookings);
+};
+
+exports.updateBookingStatus = async (req, res) => {
+  const { bookingId, status } = req.body;
+  await Booking.findByIdAndUpdate(bookingId, { status });
+  res.json({ message: 'Booking updated' });
 };
