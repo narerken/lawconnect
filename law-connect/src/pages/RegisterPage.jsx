@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { 
-  Form, 
-  Input, 
-  Button, 
-  Select, 
-  Card, 
-  Typography, 
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Card,
+  Typography,
   Alert,
   Row,
   Col,
-  Divider 
+  Divider
 } from 'antd';
-import { 
-  MailOutlined, 
-  UserOutlined, 
+import {
+  MailOutlined,
+  UserOutlined,
   LockOutlined,
   SolutionOutlined
 } from '@ant-design/icons';
@@ -45,7 +45,7 @@ const RegisterPage = () => {
   return (
     <Row justify="center" align="middle" style={{ minHeight: '100vh', background: '#f0f2f5' }}>
       <Col xs={24} sm={20} md={16} lg={12} xl={10}>
-        <Card 
+        <Card
           title={
             <Title level={3} style={{ textAlign: 'center', marginBottom: 0 }}>
               <SolutionOutlined style={{ marginRight: 8 }} />
@@ -55,15 +55,32 @@ const RegisterPage = () => {
           style={{ borderRadius: 8, boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)' }}
         >
           {error && (
-            <Alert
-              message={error}
-              type="error"
-              showIcon
-              closable
-              style={{ marginBottom: 24 }}
-              onClose={() => setError(null)}
-            />
+            <Space
+              style={{
+                width: '100%',
+                backgroundColor: '#fff1f0',
+                border: '1px solid #ffa39e',
+                borderRadius: 8,
+                padding: '12px 16px',
+                marginBottom: 24,
+              }}
+              align="center"
+            >
+              <LoginOutlined style={{ color: '#cf1322', fontSize: 18 }} />
+              <Text type="danger" style={{ margin: 0 }}>
+                {error}
+              </Text>
+              <Button
+                type="text"
+                size="small"
+                onClick={() => setError(null)}
+                style={{ marginLeft: 'auto', color: '#cf1322' }}
+              >
+                Закрыть
+              </Button>
+            </Space>
           )}
+
 
           <Form
             form={form}
@@ -80,9 +97,9 @@ const RegisterPage = () => {
                 { type: 'email', message: 'Неверный формат email' }
               ]}
             >
-              <Input 
-                prefix={<MailOutlined />} 
-                placeholder="example@domain.com" 
+              <Input
+                prefix={<MailOutlined />}
+                placeholder="example@domain.com"
               />
             </Form.Item>
 
@@ -95,9 +112,9 @@ const RegisterPage = () => {
                 { max: 20, message: 'Максимум 20 символов' }
               ]}
             >
-              <Input 
-                prefix={<UserOutlined />} 
-                placeholder="Ваше имя" 
+              <Input
+                prefix={<UserOutlined />}
+                placeholder="Ваше имя"
               />
             </Form.Item>
 
@@ -110,9 +127,9 @@ const RegisterPage = () => {
               ]}
               hasFeedback
             >
-              <Input.Password 
-                prefix={<LockOutlined />} 
-                placeholder="Не менее 6 символов" 
+              <Input.Password
+                prefix={<LockOutlined />}
+                placeholder="Не менее 6 символов"
               />
             </Form.Item>
 
@@ -133,9 +150,9 @@ const RegisterPage = () => {
                 }),
               ]}
             >
-              <Input.Password 
-                prefix={<LockOutlined />} 
-                placeholder="Повторите пароль" 
+              <Input.Password
+                prefix={<LockOutlined />}
+                placeholder="Повторите пароль"
               />
             </Form.Item>
 
@@ -151,9 +168,9 @@ const RegisterPage = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button 
-                type="primary" 
-                htmlType="submit" 
+              <Button
+                type="primary"
+                htmlType="submit"
                 block
                 loading={loading}
                 size="large"

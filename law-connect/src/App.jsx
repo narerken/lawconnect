@@ -11,6 +11,10 @@ import AnswerQuestionPage from './pages/AnswerQuestionPage';
 import ChatPage from './pages/ChatPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import LawyerRatingPage from './pages/LawyerRatingPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import ProfilePage from './pages/ProfilePage';
+
 
 function App() {
   return (
@@ -26,6 +30,9 @@ function App() {
       <Route path="/answer" element={<ProtectedRoute role="lawyer"><AnswerQuestionPage /></ProtectedRoute>} />
       <Route path="/chat/:partnerId" element={<ProtectedRoute><ChatPage /></ProtectedRoute>} />
       <Route path="/lawyer-rating" element={<ProtectedRoute role="lawyer"><LawyerRatingPage /></ProtectedRoute>} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+      <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
     </Routes>
   );
 }
