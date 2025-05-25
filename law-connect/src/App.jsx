@@ -13,7 +13,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LawyerRatingPage from './pages/LawyerRatingPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
-import ProfilePage from './pages/ProfilePage';
 
 
 function App() {
@@ -32,7 +31,6 @@ function App() {
       <Route path="/lawyer-rating" element={<ProtectedRoute role="lawyer"><LawyerRatingPage /></ProtectedRoute>} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-      <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
     </Routes>
   );
 }
