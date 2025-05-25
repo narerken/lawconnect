@@ -13,6 +13,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LawyerRatingPage from './pages/LawyerRatingPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import UserProfile from './pages/UserProfile';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/client-dashboard" element={<ProtectedRoute role="client"><ClientDashboard /></ProtectedRoute>} />
       <Route path="/lawyer-dashboard" element={<ProtectedRoute role="lawyer"><LawyerDashboard /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
       <Route path="/ask" element={<ProtectedRoute role="client"><AskQuestionPage /></ProtectedRoute>} />
       <Route path="/lawyers" element={<ProtectedRoute role="client"><LawyerListPage /></ProtectedRoute>} />
       <Route path="/book/:lawyerId" element={<ProtectedRoute role="client"><BookConsultationPage /></ProtectedRoute>} />

@@ -36,7 +36,7 @@ const ClientDashboard = () => {
     const fetchQuestions = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`/questions/client/${user.id}`);
+        const res = await axios.get(`/api/questions/client/${user.id}`);
         setQuestions(res.data);
       } catch (error) {
         console.error('Error fetching questions:', error);
@@ -50,7 +50,7 @@ const ClientDashboard = () => {
 
   const markBest = async (questionId, index) => {
     try {
-      await axios.post(`/questions/mark-best/${questionId}/${index}`);
+      await axios.post(`/api/questions/mark-best/${questionId}/${index}`);
       setQuestions(prev => prev.map(q => 
         q._id === questionId 
           ? { 

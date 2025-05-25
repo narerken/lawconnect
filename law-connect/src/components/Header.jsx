@@ -11,11 +11,7 @@ import {
 } from 'antd';
 import { 
   LogoutOutlined,
-  UserOutlined,
-  QuestionCircleOutlined,
-  TeamOutlined,
-  MessageOutlined,
-  HomeOutlined
+  UserOutlined
 } from '@ant-design/icons';
 
 const { Header: AntHeader } = Layout;
@@ -23,7 +19,7 @@ const { Text } = Typography;
 
 const Header = () => {
   const { user, logout } = useAuth();
-  
+
   if (!user) return null;
 
   const userMenu = (
@@ -40,6 +36,10 @@ const Header = () => {
     </Menu>
   );
 
+  const avatarUrl = user.avatar
+    ? `http://localhost:5000${user.avatar}`
+    : null;
+
   return (
     <AntHeader 
       style={{ 
@@ -51,32 +51,30 @@ const Header = () => {
         zIndex: 100,
         width: '100%',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-        gap: '30px'
+        gap: '20px'
       }}
     >
-      <div style={{ marginRight: '24px' }}>
-        <Link to="/">
-          <Text strong style={{ color: '#fff', fontSize: '18px' }}>
-            LawConnect
-          </Text>
-        </Link>
-      </div>
-      <Dropdown overlay={userMenu} placement="bottomRight">
+      {/* Логотип */}
+      <Link to="/">
+        <Text strong style={{ color: '#fff', fontSize: '18px' }}>
+          LawConnect
+        </Text>
+      </Link>
+
+      {/* Блок: аватар + имя */}
+      <Dropdown overlay={userMenu} placement="bottomLeft">
         <Space 
           style={{ 
             cursor: 'pointer',
             padding: '0 12px',
-            marginRight: '20px',
-            transition: 'all 0.3s',
-            ':hover': {
-              background: 'rgba(255, 255, 255, 0.1)'
-            }
+            borderRadius: 4,
+            transition: 'all 0.3s'
           }}
         >
           <Badge dot={user.role === 'lawyer' && user.newAnswers > 0}>
             <Avatar 
-              icon={<UserOutlined />} 
-              src={user.avatar}
+              icon={!avatarUrl && <UserOutlined />}
+              src={avatarUrl}
               style={{ backgroundColor: '#1890ff' }}
             />
           </Badge>

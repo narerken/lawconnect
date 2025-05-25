@@ -33,7 +33,7 @@ const RegisterPage = () => {
     try {
       setLoading(true);
       setError(null);
-      await axios.post('/auth/register', values);
+      await axios.post('/api/auth/register', values);
       navigate('/login', { state: { success: 'Регистрация прошла успешно! Теперь вы можете войти.' } });
     } catch (err) {
       setError(err.response?.data?.message || 'Ошибка регистрации');

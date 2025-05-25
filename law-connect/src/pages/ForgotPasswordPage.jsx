@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post('/auth/forgot-password', { email });
+      const res = await axios.post('/api/auth/forgot-password', { email });
       setMsg(res.data.message);
     } catch (err) {
       setMsg(err.response?.data?.message || 'Произошла ошибка. Пожалуйста, попробуйте позже.');

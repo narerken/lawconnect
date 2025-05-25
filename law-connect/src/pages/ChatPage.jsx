@@ -36,7 +36,7 @@ const ChatPage = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get(`/chat/${user.id}/${partnerId}`);
+      const res = await axios.get(`/api/chat/${user.id}/${partnerId}`);
       setMessages(res.data);
       scrollToBottom();
     } catch (error) {
@@ -46,7 +46,7 @@ const ChatPage = () => {
 
   const fetchPartnerData = async () => {
     try {
-      const res = await axios.get(`/users/${partnerId}`);
+      const res = await axios.get(`/api/users/${partnerId}`);
       setPartnerData(res.data);
     } catch (error) {
       console.error('Error fetching partner data:', error);
@@ -69,7 +69,7 @@ const ChatPage = () => {
     
     try {
       setLoading(true);
-      await axios.post('/chat/send', { 
+      await axios.post('/api/chat/send', { 
         from: user.id, 
         to: partnerId, 
         text 

@@ -28,7 +28,7 @@ export default function ResetPasswordPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`/auth/reset-password/${token}`, { password });
+      await axios.post(`/api/auth/reset-password/${token}`, { password });
       setMsg('Пароль успешно изменён. Перенаправление...');
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {

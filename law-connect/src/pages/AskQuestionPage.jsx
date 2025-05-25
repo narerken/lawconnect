@@ -27,7 +27,7 @@ const AskQuestionPage = () => {
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
-      await axios.post('/questions/ask', { 
+      await axios.post('/api/questions/ask', { 
         clientId: user.id, 
         text: values.question 
       });

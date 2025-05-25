@@ -31,7 +31,7 @@ const LawyerListPage = () => {
   useEffect(() => {
     const fetchLawyers = async () => {
       try {
-        const res = await axios.get('/questions/all');
+        const res = await axios.get('/api/questions/all');
         const ratingMap = {};
 
         res.data.forEach(q => {

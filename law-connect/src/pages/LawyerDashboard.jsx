@@ -47,10 +47,10 @@ const LawyerDashboard = () => {
             try {
                 setLoading(true);
 
-                const bookingsRes = await axios.get(`/bookings/${user.id}`);
+                const bookingsRes = await axios.get(`/api/bookings/${user.id}`);
                 setBookings(bookingsRes.data);
 
-                const questionsRes = await axios.get(`/questions/all`);
+                const questionsRes = await axios.get(`/api/questions/all`);
                 setQuestions(questionsRes.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -64,7 +64,7 @@ const LawyerDashboard = () => {
 
     const updateStatus = async (id, status) => {
         try {
-            await axios.post('/bookings/status', { bookingId: id, status });
+            await axios.post('/api/bookings/status', { bookingId: id, status });
             setBookings(prev => prev.map(b =>
                 b._id === id ? { ...b, status } : b
             ));

@@ -14,14 +14,9 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: undefined
   },
-   avatarUrl: { type: String, default: '' },
-  settings: {
-    notifications: {
-      email: { type: Boolean, default: true },
-      inApp: { type: Boolean, default: true },
-    },
-    theme: { type: String, enum: ['light','dark'], default: 'light' },
-    language: { type: String, enum: ['en','ru'], default: 'ru' },
-  }
+   avatar: {
+  type: String,
+  default: '',
+}
 });
 module.exports = mongoose.model('User', userSchema);

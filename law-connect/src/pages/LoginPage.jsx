@@ -32,8 +32,8 @@ const LoginPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.post('/auth/login', values);
-      login(res.data.user);
+      const res = await axios.post('/api/auth/login', values);
+      login({ ...res.data.user, token: res.data.token });
       navigate(res.data.user.role === 'client' ? '/client-dashboard' : '/lawyer-dashboard', {
         state: { success: 'Вы успешно вошли в систему!' }
       });

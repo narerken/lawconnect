@@ -45,7 +45,7 @@ const BookConsultationPage = () => {
       const dateTime = dayjs(values.date[0]).format('YYYY-MM-DD') + 'T' + 
                       dayjs(values.time).format('HH:mm');
       
-      await axios.post('/bookings', { 
+      await axios.post('/api/bookings', { 
         clientId: user.id, 
         lawyerId, 
         date: dateTime 

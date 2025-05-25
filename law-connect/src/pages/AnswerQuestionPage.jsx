@@ -34,7 +34,7 @@ const AnswerQuestionPage = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const res = await axios.get('/questions/all');
+        const res = await axios.get('/api/questions/all');
         const unanswered = res.data.filter(q =>
           !q.answers.some(a => a.lawyerId?._id === user.id)
         );
@@ -60,7 +60,7 @@ const AnswerQuestionPage = () => {
         return;
       }
 
-      await axios.post('/questions/answer', { 
+      await axios.post('/api/questions/answer', { 
         questionId: qId, 
         lawyerId: user.id, 
         text 
