@@ -11,22 +11,22 @@ import {
     Row,
     Col,
     Statistic,
-    Badge,
     message,
     Tabs
 } from 'antd';
 import {
     CheckOutlined,
     CloseOutlined,
-    ClockCircleOutlined,
-    UserOutlined,
     CalendarOutlined,
+    UserOutlined,
     StarOutlined,
     MessageOutlined,
     QuestionCircleOutlined,
-    FormOutlined // Добавлена новая иконка
+    FormOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from 'react-i18next';
 import axios from '../api/axios';
 import Header from '../components/Header';
 import dayjs from 'dayjs';
@@ -37,6 +37,10 @@ const { TabPane } = Tabs;
 
 const LawyerDashboard = () => {
     const { user } = useAuth();
+    const { theme } = useTheme();
+    const { t } = useTranslation();
+    const isDark = theme === 'dark';
+
     const [bookings, setBookings] = useState([]);
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -46,10 +50,8 @@ const LawyerDashboard = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-
                 const bookingsRes = await axios.get(`/api/bookings/${user.id}`);
                 setBookings(bookingsRes.data);
-
                 const questionsRes = await axios.get(`/api/questions/all`);
                 setQuestions(questionsRes.data);
             } catch (error) {
@@ -65,12 +67,12 @@ const LawyerDashboard = () => {
     const updateStatus = async (id, status) => {
         try {
             await axios.post('/api/bookings/status', { bookingId: id, status });
-            setBookings(prev => prev.map(b =>
-                b._id === id ? { ...b, status } : b
-            ));
-            message.success(`Запись ${status === 'confirmed' ? 'подтверждена' : 'отклонена'}`);
+            setBookings(prev =>
+                prev.map(b => (b._id === id ? { ...b, status } : b))
+            );
+            message.success(t(status === 'confirmed' ? 'confirmed' : 'rejected'));
         } catch (error) {
-            message.error('Ошибка при обновлении статуса');
+            message.error(t('statusUpdateError'));
             console.error('Error updating booking status:', error);
         }
     };
@@ -78,58 +80,53 @@ const LawyerDashboard = () => {
     const getStatusTag = (status) => {
         switch (status) {
             case 'confirmed':
-                return <Tag color="success">Подтверждено</Tag>;
+                return <Tag color="success">{t('confirmed')}</Tag>;
             case 'rejected':
-                return <Tag color="error">Отклонено</Tag>;
+                return <Tag color="error">{t('rejected')}</Tag>;
             default:
-                return <Tag color="processing">Ожидает</Tag>;
+                return <Tag color="processing">{t('pending')}</Tag>;
         }
     };
 
     return (
         <div style={{
             minHeight: '100vh',
-            background: '#f0f2f5',
+            background: isDark ? '#141414' : '#f0f2f5',
+            color: isDark ? '#f0f0f0' : '#000'
         }}>
             <Header />
 
             <div style={{ padding: 150 }}>
                 <Row gutter={[24, 24]}>
                     <Col span={24}>
-                        <Title level={2} style={{ marginBottom: 0 }}>
-                            Добро пожаловать, <Text type="secondary">{user.username}</Text>
+                        <Title level={2} style={{ marginBottom: 0, color: isDark ? '#fff' : '#000' }}>
+                            {t('welcome')}, <Text type="secondary" style={{ color: isDark ? '#bbb' : undefined }}>{user.username}</Text>
                         </Title>
-                        <Text type="secondary">Ваш личный кабинет юриста</Text>
+                        <Text type="secondary" style={{ color: isDark ? '#888' : undefined }}>
+                            {t('lawyerDashboard')}
+                        </Text>
                     </Col>
 
-                    {/* Добавлена кнопка для перехода на страницу ответов */}
                     <Col span={24}>
                         <Space style={{ marginBottom: 24 }}>
                             <Link to="/answer">
-                                <Button
-                                    type="primary"
-                                    icon={<FormOutlined />}
-                                >
-                                    Ответить на вопросы
+                                <Button type="primary" icon={<FormOutlined />}>
+                                    {t('answerQuestions')}
                                 </Button>
                             </Link>
 
                             <Link to="/lawyer-rating">
-                                <Button
-                                    icon={<StarOutlined />}
-                                    type="default"
-                                >
-                                     Рейтинг юристов
+                                <Button icon={<StarOutlined />} type="default">
+                                    {t('lawyerRating')}
                                 </Button>
                             </Link>
                         </Space>
                     </Col>
 
-
                     <Col xs={24} sm={12} md={8}>
-                        <Card>
+                        <Card style={{ backgroundColor: isDark ? '#1f1f1f' : '#fff' }}>
                             <Statistic
-                                title="Ваш рейтинг"
+                                title={t('yourRating')}
                                 value={user.points || 0}
                                 prefix={<StarOutlined />}
                             />
@@ -137,9 +134,9 @@ const LawyerDashboard = () => {
                     </Col>
 
                     <Col xs={24} sm={12} md={8}>
-                        <Card>
+                        <Card style={{ backgroundColor: isDark ? '#1f1f1f' : '#fff' }}>
                             <Statistic
-                                title="Всего записей"
+                                title={t('totalBookings')}
                                 value={bookings.length}
                                 prefix={<CalendarOutlined />}
                             />
@@ -147,9 +144,9 @@ const LawyerDashboard = () => {
                     </Col>
 
                     <Col xs={24} sm={12} md={8}>
-                        <Card>
+                        <Card style={{ backgroundColor: isDark ? '#1f1f1f' : '#fff' }}>
                             <Statistic
-                                title="Новых вопросов"
+                                title={t('newQuestions')}
                                 value={questions.filter(q =>
                                     !q.answers.some(a => a.lawyerId?._id === user.id)
                                 ).length}
@@ -162,13 +159,12 @@ const LawyerDashboard = () => {
                         <Tabs
                             activeKey={activeTab}
                             onChange={setActiveTab}
-                            tabBarStyle={{ marginBottom: 24 }}
+                            tabBarStyle={{ marginBottom: 24, color: isDark ? '#fff' : undefined }}
                         >
                             <TabPane
                                 tab={
-                                    <span>
-                                        <CalendarOutlined />
-                                        Записи на консультации
+                                    <span style={{ color: isDark ? '#fff' : undefined }}>
+                                        <CalendarOutlined /> {t('consultationBookings')}
                                     </span>
                                 }
                                 key="bookings"
@@ -179,7 +175,12 @@ const LawyerDashboard = () => {
                                     renderItem={booking => (
                                         <Card
                                             key={booking._id}
-                                            style={{ marginBottom: 16, borderRadius: 8 }}
+                                            style={{
+                                                marginBottom: 16,
+                                                borderRadius: 8,
+                                                backgroundColor: isDark ? '#1f1f1f' : '#fff',
+                                                color: isDark ? '#fff' : undefined
+                                            }}
                                             hoverable
                                         >
                                             <List.Item
@@ -191,14 +192,14 @@ const LawyerDashboard = () => {
                                                                 icon={<CheckOutlined />}
                                                                 onClick={() => updateStatus(booking._id, 'confirmed')}
                                                             >
-                                                                Подтвердить
+                                                                {t('confirm')}
                                                             </Button>
                                                             <Button
                                                                 danger
                                                                 icon={<CloseOutlined />}
                                                                 onClick={() => updateStatus(booking._id, 'rejected')}
                                                             >
-                                                                Отклонить
+                                                                {t('reject')}
                                                             </Button>
                                                         </Space>
                                                     ) : (
@@ -206,22 +207,31 @@ const LawyerDashboard = () => {
                                                     ),
                                                     <Link to={`/chat/${booking.clientId?._id}`}>
                                                         <Button icon={<MessageOutlined />}>
-                                                            Чат с клиентом
+                                                            {t('chatWithClient')}
                                                         </Button>
                                                     </Link>
                                                 ]}
                                             >
                                                 <List.Item.Meta
-                                                    avatar={<Avatar src={booking.clientId?.avatar} icon={<UserOutlined />} />}
-                                                    title={booking.clientId?.username || 'Неизвестный клиент'}
+                                                    avatar={
+                                                        <Avatar
+                                                            src={booking.clientId?.avatar}
+                                                            icon={<UserOutlined />}
+                                                        />
+                                                    }
+                                                    title={
+                                                        <span style={{ color: isDark ? '#fff' : undefined }}>
+                                                            {booking.clientId?.username || t('unknownClient')}
+                                                        </span>
+                                                    }
                                                     description={
                                                         <Space direction="vertical" size={4}>
-                                                            <Text>
+                                                            <Text style={{ color: isDark ? '#ccc' : undefined }}>
                                                                 <CalendarOutlined style={{ marginRight: 8 }} />
                                                                 {dayjs(booking.date).format('D MMMM YYYY, HH:mm')}
                                                             </Text>
-                                                            <Text type="secondary">
-                                                                Запись создана: {dayjs(booking.createdAt).format('D MMMM YYYY')}
+                                                            <Text type="secondary" style={{ color: isDark ? '#888' : undefined }}>
+                                                                {t('createdAt')}: {dayjs(booking.createdAt).format('D MMMM YYYY')}
                                                             </Text>
                                                         </Space>
                                                     }
