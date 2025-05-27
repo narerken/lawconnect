@@ -15,7 +15,6 @@ i18n
     },
     fallbackLng: 'en',
     detection: {
-      // 👇 это ключевой блок
       order: ['localStorage', 'navigator'],
       caches: ['localStorage'],
     },

@@ -31,11 +31,10 @@ exports.forgotPassword = async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ message: 'Пользователь не найден' });
 
-  // создаём токен и сохраняем хеш в БД
   const resetToken = crypto.randomBytes(20).toString('hex');
   const hash = crypto.createHash('sha256').update(resetToken).digest('hex');
   user.resetPasswordToken = hash;
-  user.resetPasswordExpire = Date.now() + 3600000; // 1 час
+  user.resetPasswordExpire = Date.now() + 3600000; //1 hour
   await user.save({ validateBeforeSave: false });
 
   const resetUrl = `${process.env.FRONT_URL}/reset-password/${resetToken}`;
@@ -53,7 +52,6 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-// Сброс пароля по токену
 exports.resetPassword = async (req, res) => {
   const resetToken = req.params.token;
   const hash = crypto.createHash('sha256').update(resetToken).digest('hex');

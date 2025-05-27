@@ -1,4 +1,3 @@
-// src/api/axios.js
 import axios from 'axios';
 
 const instance = axios.create({
@@ -8,7 +7,7 @@ const instance = axios.create({
   },
 });
 
-// Добавляем токен авторизации, если он есть в localStorage
+
 instance.interceptors.request.use(
   (config) => {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -22,7 +21,6 @@ instance.interceptors.request.use(
   }
 );
 
-// Глобальная обработка ошибок (опционально)
 instance.interceptors.response.use(
   (response) => response,
   (error) => {

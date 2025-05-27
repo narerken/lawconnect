@@ -14,7 +14,6 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/questions', require('./routes/questionRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/chat', require('./routes/chatRoutes'));
-// app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/export', require('./routes/exportRoutes'));
 
 mongoose.connect(process.env.MONGO_URI)

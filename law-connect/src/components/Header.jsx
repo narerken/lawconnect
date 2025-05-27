@@ -70,16 +70,13 @@ const Header = () => {
         borderBottom: theme === 'light' ? '1px solid #f0f0f0' : 'none'
       }}
     >
-      {/* ВСЁ выровнено влево */}
       <Space size="large" align="center">
-        {/* Логотип */}
         <Link to="/">
           <Text strong style={{ color: theme === 'light' ? '#001529' : '#fff', fontSize: '18px' }}>
             {t('appName')}
           </Text>
         </Link>
 
-        {/* Имя пользователя и аватар */}
         <Dropdown overlay={userMenu} placement="bottomLeft">
           <Space
             style={{
@@ -102,7 +99,6 @@ const Header = () => {
           </Space>
         </Dropdown>
 
-        {/* Кнопка темы */}
         <Button
           icon={<BulbOutlined />}
           onClick={toggleTheme}
@@ -112,7 +108,6 @@ const Header = () => {
           {theme === 'light' ? '🌙' : '☀️'}
         </Button>
 
-        {/* Кнопка языка */}
         <Dropdown overlay={languageMenu} placement="bottomLeft">
           <Button
             type="text"
@@ -122,7 +117,6 @@ const Header = () => {
         </Dropdown>
       </Space>
 
-      {/* ПРАВАЯ ЧАСТЬ — пуста, но используется для правильного отступа */}
       <div />
     </AntHeader>
   );

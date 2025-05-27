@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   Card,
   List,
@@ -11,8 +11,7 @@ import {
   Row,
   Col,
   Select,
-  Radio,
-  message
+  Alert
 } from 'antd';
 import {
   MessageOutlined,
@@ -37,41 +36,42 @@ const ClientDashboard = () => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   const [questions, setQuestions] = useState([]);
-  const [lastCounts, setLastCounts] = useState({});
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState('all');
-  const [sortOrder, setSortOrder] = useState('desc');
+  const [newAnswerNotification, setNewAnswerNotification] = useState(false);
+
+  const initialLoad = useRef(true);
+  const prevQuestionsRef = useRef([]);
+
+  const fetchQuestions = async () => {
+    try {
+      const res = await axios.get(`/api/questions/client/${user.id}`);
+      const newQuestions = res.data;
+
+      if (!initialLoad.current) {
+        const hasNewAnswers = newQuestions.some(q => {
+          const prev = prevQuestionsRef.current.find(p => p._id === q._id);
+          return prev && q.answers.length > prev.answers.length;
+        });
+
+        if (hasNewAnswers) {
+          setNewAnswerNotification(true);
+        }
+      }
+
+      setQuestions(newQuestions);
+      prevQuestionsRef.current = newQuestions;
+      initialLoad.current = false;
+    } catch (error) {
+      console.error('Error fetching questions:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const res = await axios.get(`/api/questions/client/${user.id}`);
-        const newQuestions = res.data;
-
-        // Check for new answers
-        newQuestions.forEach(q => {
-          const prev = lastCounts[q._id] || 0;
-          if (q.answers.length > prev) {
-            message.info(t('newAnswerReceived'), 3);
-          }
-        });
-
-        setQuestions(newQuestions);
-
-        const newCounts = {};
-        newQuestions.forEach(q => {
-          newCounts[q._id] = q.answers.length;
-        });
-        setLastCounts(newCounts);
-      } catch (error) {
-        console.error('Error fetching questions:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchQuestions();
-    const interval = setInterval(fetchQuestions, 30000);
+    const interval = setInterval(fetchQuestions, 10000);
     return () => clearInterval(interval);
   }, [user.id]);
 
@@ -82,11 +82,11 @@ const ClientDashboard = () => {
         prev.map(q =>
           q._id === questionId
             ? {
-                ...q,
-                answers: q.answers.map((a, i) =>
-                  i === index ? { ...a, isBest: true } : { ...a, isBest: false }
-                )
-              }
+              ...q,
+              answers: q.answers.map((a, i) =>
+                i === index ? { ...a, isBest: true } : { ...a, isBest: false }
+              )
+            }
             : q
         )
       );
@@ -103,11 +103,6 @@ const ClientDashboard = () => {
       if (filter === 'unanswered') return q.answers.length === 0;
       return true;
     })
-    .sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-    });
 
   return (
     <div
@@ -164,6 +159,23 @@ const ClientDashboard = () => {
                 <Option value="unanswered">{t('unansweredQuestions')}</Option>
               </Select>
             </Space>
+
+            {newAnswerNotification && (
+              <Alert
+                message={t('newAnswerReceived')}
+                description=""
+                type="info"
+                showIcon
+                closable
+                onClose={() => setNewAnswerNotification(false)}
+                style={{
+                  marginBottom: 16,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
+              />
+            )}
 
             <Divider
               orientation="left"

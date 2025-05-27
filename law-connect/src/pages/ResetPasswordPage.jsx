@@ -10,7 +10,7 @@ import {
   Row,
   Col,
   Divider,
-  Space // Добавляем Space для горизонтального расположения
+  Space 
 } from 'antd';
 import { LockOutlined, LoginOutlined } from '@ant-design/icons';
 import axios from '../api/axios';
@@ -53,7 +53,7 @@ export default function ResetPasswordPage() {
           {msg && (
             <Alert
               message={
-                <Space> {/* Обернули сообщение в Space для горизонтального расположения */}
+                <Space>
                   {msg.includes('успешно') ? (
                     <>
                       <span>{msg}</span>

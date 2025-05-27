@@ -118,7 +118,6 @@ const ChatPage = () => {
             margin: '0 auto'
           }}
         >
-          {/* Сообщения */}
           <div
             style={{
               height: '60vh',
@@ -173,7 +172,6 @@ const ChatPage = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Поле ввода и кнопка отправки */}
           <div
             style={{
               display: 'flex',

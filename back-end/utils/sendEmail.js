@@ -1,4 +1,3 @@
-// back-end/utils/sendEmail.js
 const nodemailer = require('nodemailer');
 
 async function sendEmail({ to, subject, text, html }) {
@@ -25,7 +24,7 @@ async function sendEmail({ to, subject, text, html }) {
 
   } catch (err) {
     console.error('Ошибка при отправке почты:', err);
-    throw err;  // пробросим дальше, чтобы controller увидел
+    throw err;
   }
 }
 

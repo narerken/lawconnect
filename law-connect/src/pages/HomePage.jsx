@@ -23,7 +23,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './HomePage.css';
 
-// Извлекаем нужные компоненты из Layout
 const { Header, Footer, Content } = Layout;
 const { Title, Paragraph } = Typography;
 
@@ -56,7 +55,6 @@ const HomePage = () => {
 
     return (
         <Layout className="layout">
-            {/* Main Content - добавляем отступ сверху для фиксированного header */}
             <Content style={{ padding: '0 10px', marginTop: 10 }}>
                 <div className="site-layout-content">
                     {/* Hero Section */}
@@ -82,7 +80,6 @@ const HomePage = () => {
                         </Space>
                     </div>
 
-                    {/* Features Section */}
                     <Divider orientation="center" style={{ fontSize: 24, margin: '48px 0' }}>
                         Возможности платформы
                     </Divider>

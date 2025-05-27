@@ -66,9 +66,9 @@ const LawyerRatingPage = () => {
 
   const getMedalColor = (index) => {
     switch(index) {
-      case 0: return '#ffd700'; // gold
-      case 1: return '#c0c0c0'; // silver
-      case 2: return '#cd7f32'; // bronze
+      case 0: return '#ffd700'; 
+      case 1: return '#c0c0c0'; 
+      case 2: return '#cd7f32';
       default: return null;
     }
   };
