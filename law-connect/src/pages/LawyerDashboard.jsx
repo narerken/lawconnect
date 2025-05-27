@@ -12,7 +12,8 @@ import {
     Col,
     Statistic,
     message,
-    Tabs
+    Tabs,
+    Select
 } from 'antd';
 import {
     CheckOutlined,
@@ -34,6 +35,7 @@ import { Link } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 const LawyerDashboard = () => {
     const { user } = useAuth();
@@ -45,6 +47,7 @@ const LawyerDashboard = () => {
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('bookings');
+    const [bookingFilter, setBookingFilter] = useState('all');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -87,6 +90,13 @@ const LawyerDashboard = () => {
                 return <Tag color="processing">{t('pending')}</Tag>;
         }
     };
+
+    const filteredBookings = bookings.filter(b => {
+        if (bookingFilter === 'confirmed') return b.status === 'confirmed';
+        if (bookingFilter === 'rejected') return b.status === 'rejected';
+        if (bookingFilter === 'pending') return b.status === 'pending';
+        return true;
+    });
 
     return (
         <div style={{
@@ -169,9 +179,22 @@ const LawyerDashboard = () => {
                                 }
                                 key="bookings"
                             >
+                                <Space style={{ marginBottom: 16 }}>
+                                    <Select
+                                        value={bookingFilter}
+                                        onChange={setBookingFilter}
+                                        placeholder={t('filterByStatus')}
+                                    >
+                                        <Option value="all">{t('all')}</Option>
+                                        <Option value="pending">{t('pending')}</Option>
+                                        <Option value="confirmed">{t('confirmed')}</Option>
+                                        <Option value="rejected">{t('rejected')}</Option>
+                                    </Select>
+                                </Space>
+
                                 <List
                                     loading={loading}
-                                    dataSource={bookings.sort((a, b) => new Date(a.date) - new Date(b.date))}
+                                    dataSource={filteredBookings.sort((a, b) => new Date(a.date) - new Date(b.date))}
                                     renderItem={booking => (
                                         <Card
                                             key={booking._id}

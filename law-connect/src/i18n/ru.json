@@ -32,5 +32,10 @@
   "chatWithClient": "Чат с клиентом",
   "unknownClient": "Неизвестный клиент",
   "createdAt": "Запись создана",
-  "statusUpdateError": "Ошибка при обновлении статуса"
+  "statusUpdateError": "Ошибка при обновлении статуса",
+  "allQuestions" : "Все",
+  "answeredQuestions" : "Отвеченный",
+  "unansweredQuestions" : "Неотвеченный",
+  "all" : "Все",
+  "newAnswerReceived": "Появился новый ответ"
 }

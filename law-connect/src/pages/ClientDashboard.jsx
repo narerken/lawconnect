@@ -9,7 +9,10 @@ import {
   Divider,
   Tag,
   Row,
-  Col
+  Col,
+  Select,
+  Radio,
+  message
 } from 'antd';
 import {
   MessageOutlined,
@@ -27,20 +30,39 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 
 const { Title, Text } = Typography;
+const { Option } = Select;
 
 const ClientDashboard = () => {
   const { user } = useAuth();
   const { theme } = useTheme();
   const { t } = useTranslation();
   const [questions, setQuestions] = useState([]);
+  const [lastCounts, setLastCounts] = useState({});
   const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('desc');
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        setLoading(true);
         const res = await axios.get(`/api/questions/client/${user.id}`);
-        setQuestions(res.data);
+        const newQuestions = res.data;
+
+        // Check for new answers
+        newQuestions.forEach(q => {
+          const prev = lastCounts[q._id] || 0;
+          if (q.answers.length > prev) {
+            message.info(t('newAnswerReceived'), 3);
+          }
+        });
+
+        setQuestions(newQuestions);
+
+        const newCounts = {};
+        newQuestions.forEach(q => {
+          newCounts[q._id] = q.answers.length;
+        });
+        setLastCounts(newCounts);
       } catch (error) {
         console.error('Error fetching questions:', error);
       } finally {
@@ -49,6 +71,8 @@ const ClientDashboard = () => {
     };
 
     fetchQuestions();
+    const interval = setInterval(fetchQuestions, 30000);
+    return () => clearInterval(interval);
   }, [user.id]);
 
   const markBest = async (questionId, index) => {
@@ -72,6 +96,18 @@ const ClientDashboard = () => {
   };
 
   const isDark = theme === 'dark';
+
+  const filteredSortedQuestions = questions
+    .filter(q => {
+      if (filter === 'answered') return q.answers.length > 0;
+      if (filter === 'unanswered') return q.answers.length === 0;
+      return true;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.createdAt);
+      const dateB = new Date(b.createdAt);
+      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    });
 
   return (
     <div
@@ -121,6 +157,14 @@ const ClientDashboard = () => {
           </Col>
 
           <Col span={24}>
+            <Space style={{ marginBottom: 16 }}>
+              <Select value={filter} onChange={setFilter}>
+                <Option value="all">{t('allQuestions')}</Option>
+                <Option value="answered">{t('answeredQuestions')}</Option>
+                <Option value="unanswered">{t('unansweredQuestions')}</Option>
+              </Select>
+            </Space>
+
             <Divider
               orientation="left"
               style={{
@@ -140,7 +184,7 @@ const ClientDashboard = () => {
             <List
               itemLayout="vertical"
               loading={loading}
-              dataSource={questions}
+              dataSource={filteredSortedQuestions}
               renderItem={question => (
                 <Card
                   key={question._id}

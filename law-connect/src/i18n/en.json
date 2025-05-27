@@ -32,5 +32,9 @@
   "chatWithClient": "Chat with client",
   "unknownClient": "Unknown client",
   "createdAt": "Created at",
-  "statusUpdateError": "Error updating status"
+  "statusUpdateError": "Error updating status",
+  "allQuestions" : "All",
+  "answeredQuestions" : "Answered",
+  "unansweredQuestions" : "Unanswered",
+  "newAnswerReceived": "New answer received"
 }
