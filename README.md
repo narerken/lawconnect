@@ -58,16 +58,73 @@ LawConnect is a full-stack web application that connects clients with lawyers fo
 
 ## 📂 Project Structure
 
+```
 law-connect/
-├── client/ # React frontend
-│ ├── components/
-│ ├── context/
-│ ├── pages/
-│ ├── i18n/
-│ └── App.jsx
-├── backend/ # Express backend
-│ ├── controllers/
-│ ├── models/
-│ ├── routes/
-│ ├── middleware/
-│ └── server.js
+├── client/               # React frontend
+│   ├── components/
+│   ├── context/
+│   ├── pages/
+│   ├── i18n/
+│   └── App.jsx
+├── backend/              # Express backend
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   └── server.js
+```
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/yourusername/law-connect.git
+cd law-connect
+```
+
+### 2. Install dependencies
+
+#### Backend
+```bash
+cd backend
+npm install
+```
+
+#### Frontend
+```bash
+cd ../client
+npm install
+```
+
+### 3. Configure `.env`
+
+Create `.env` in `backend/`:
+```
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_jwt_secret
+SMTP_USER=your_email
+SMTP_PASS=your_password
+```
+
+### 4. Run the app
+
+#### Start backend
+```bash
+cd backend
+npm run dev
+```
+
+#### Start frontend
+```bash
+cd client
+npm run dev
+```
+
+---
+
+
+## 📚 License
+
+This project is licensed under the MIT License.
