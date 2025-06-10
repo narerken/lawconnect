@@ -34,11 +34,6 @@ const BookConsultationPage = () => {
   const [lawyerData, setLawyerData] = useState(null);
   const navigate = useNavigate();
 
-  // В реальном приложении нужно загрузить данные юриста по lawyerId
-  // useEffect(() => {
-  //   axios.get(`/lawyers/${lawyerId}`).then(res => setLawyerData(res.data));
-  // }, [lawyerId]);
-
   const handleSubmit = async (values) => {
     try {
       setLoading(true);
